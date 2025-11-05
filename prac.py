@@ -1,15 +1,12 @@
 import streamlit as st
 import pandas as pd
 
-# --- Configuración de la página ---
 st.set_page_config(
     page_title="EcoAprende",
     page_icon="🌱",
     layout="wide"
 )
 
-# --- Datos de Progreso Simulados ---
-# Esto simula un sistema de progreso y puntajes
 progreso = {
     "Solar": {"completado": True, "puntaje": 10},
     "Eolica": {"completado": False, "puntaje": 0},
@@ -21,13 +18,12 @@ total_lecciones = len(progreso)
 lecciones_completadas = sum(1 for data in progreso.values() if data["completado"])
 insignias = lecciones_completadas
 
-# --- Funciones de Interacción ---
 
 def mostrar_dashboard():
     """Pantalla Principal: Dashboard del Estudiante."""
     st.header("🌱 EcoAprende: Tu Aventura Ecológica")
     
-    # Muestra el progreso
+
     col1, col2 = st.columns([1, 4])
     with col1:
         st.metric(label="Insignias Obtenidas", value=f"{insignias}/{total_lecciones}", delta="¡Sigue así!")
@@ -37,13 +33,13 @@ def mostrar_dashboard():
     st.markdown("---")
     st.subheader("Selecciona una Lección para empezar a aprender:")
     
-    # Crear dos filas de columnas para las tarjetas
+
     cols1 = st.columns(2)
     cols2 = st.columns(2)
     
     lecciones_keys = list(progreso.keys())
     
-    # Tarjeta 1: Solar
+  
     with cols1[0]:
         color = "green" if progreso["Solar"]["completado"] else "orange"
         st.markdown(f"""
@@ -56,7 +52,7 @@ def mostrar_dashboard():
             st.session_state['pagina'] = 'solar'
             st.rerun()
 
-    # Tarjeta 2: Eólica
+
     with cols1[1]:
         color = "green" if progreso["Eolica"]["completado"] else "blue"
         st.markdown(f"""
@@ -67,7 +63,7 @@ def mostrar_dashboard():
         """, unsafe_allow_html=True)
         st.button('Iniciar Lección', key='eolica_btn', use_container_width=True, disabled=True)
 
-    # Tarjeta 3: Hidráulica
+
     with cols2[0]:
         color = "green" if progreso["Hidraulica"]["completado"] else "cyan"
         st.markdown(f"""
@@ -78,7 +74,7 @@ def mostrar_dashboard():
         """, unsafe_allow_html=True)
         st.button('Iniciar Lección', key='hidraulica_btn', use_container_width=True, disabled=True)
 
-    # Botón para Mini-Juegos (Acceso Rápido)
+
     with cols2[1]:
         st.markdown(f"""
         <div style="background-color: #e0e0e0; padding: 20px; border-radius: 10px; border-left: 5px solid purple;">
@@ -90,8 +86,6 @@ def mostrar_dashboard():
         
     st.markdown("---")
 
-
-# --- Lección Detallada (Solar) ---
 
 def mostrar_leccion_solar():
     """Contenido de la Lección de Energía Solar."""
@@ -115,17 +109,17 @@ def mostrar_leccion_solar():
         Grandes proyectos como parques solares aprovechan esta ventaja para la generación a gran escala.
         """)
         
-        # Cuestionario Desplegable
+
         with st.expander("❓ Cuestionario Rápido: Energía Solar"):
             st.write("¡Responde para ganar 10 Puntos Ecológicos!")
             
-            # Pregunta 1
+       
             respuesta1 = st.radio(
                 "¿Qué tipo de energía solar genera electricidad directamente?",
                 ('Solar Térmica', 'Solar Fotovoltaica', 'Solar Geotérmica')
             )
             
-            # Pregunta 2
+      
             respuesta2 = st.radio(
                 "¿Cuál es uno de los principales beneficios ambientales?",
                 ('Genera pocos residuos', 'Reduce las emisiones de CO2', 'Funciona solo de noche')
@@ -134,8 +128,7 @@ def mostrar_leccion_solar():
             if st.button("Enviar Respuestas", key='quiz_solar'):
                 puntaje = 0
                 feedback = []
-                
-                # Validación simple del cuestionario
+         
                 if respuesta1 == 'Solar Fotovoltaica':
                     puntaje += 5
                     feedback.append("✅ Pregunta 1: ¡Correcto!")
@@ -150,7 +143,7 @@ def mostrar_leccion_solar():
                     
                 st.session_state['solar_completado'] = True
                 st.session_state['solar_puntaje'] = puntaje
-                st.session_state['pagina'] = 'dashboard_update'  # Página de transición
+                st.session_state['pagina'] = 'dashboard_update' 
                 st.rerun()
 
     with col_imagen:
@@ -163,33 +156,29 @@ def mostrar_leccion_solar():
         st.rerun()
 
 
-# --- Lógica de la Aplicación Principal ---
 
-# Inicializar estado de la página si no existe
 if 'pagina' not in st.session_state:
     st.session_state['pagina'] = 'dashboard'
 
-# Inicializar estado de las lecciones si no existe
+
 if 'solar_completado' not in st.session_state:
     st.session_state['solar_completado'] = progreso["Solar"]["completado"]
     st.session_state['solar_puntaje'] = progreso["Solar"]["puntaje"]
 
-# Lógica de navegación
+
 if st.session_state['pagina'] == 'dashboard':
     mostrar_dashboard()
 elif st.session_state['pagina'] == 'solar':
     mostrar_leccion_solar()
 elif st.session_state['pagina'] == 'dashboard_update':
-    # Lógica de actualización de progreso después del quiz
-    
+
     if st.session_state.get('solar_completado'):
         progreso["Solar"]["completado"] = True
         progreso["Solar"]["puntaje"] = st.session_state.get('solar_puntaje', 0)
         
         st.success(f"¡Cuestionario completado! Ganaste **{progreso['Solar']['puntaje']}** Puntos Ecológicos.")
         st.balloons()
-        
-        # Actualiza el estado global de la sesión
+
         st.session_state['solar_completado'] = progreso["Solar"]["completado"]
         st.session_state['solar_puntaje'] = progreso["Solar"]["puntaje"]
         
