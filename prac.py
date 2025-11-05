@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 
-# --- Configuración de la Página ---
+# --- Configuración de la página ---
 st.set_page_config(
     page_title="EcoAprende",
     page_icon="🌱",
@@ -16,6 +16,7 @@ progreso = {
     "Hidraulica": {"completado": False, "puntaje": 0},
     "Biomasa": {"completado": False, "puntaje": 0},
 }
+
 total_lecciones = len(progreso)
 lecciones_completadas = sum(1 for data in progreso.values() if data["completado"])
 insignias = lecciones_completadas
@@ -36,8 +37,6 @@ def mostrar_dashboard():
     st.markdown("---")
     st.subheader("Selecciona una Lección para empezar a aprender:")
     
-    # Tarjetas de Lección
-    
     # Crear dos filas de columnas para las tarjetas
     cols1 = st.columns(2)
     cols2 = st.columns(2)
@@ -51,10 +50,9 @@ def mostrar_dashboard():
         <div style="background-color: #f0f2f6; padding: 20px; border-radius: 10px; border-left: 5px solid {color};">
             <h4>🌞 Energía Solar</h4>
             <p>Aprende sobre la energía del sol. Puntaje: {progreso["Solar"]["puntaje"]}</p>
-            {st.button('Iniciar Lección', key='solar_btn', use_container_width=True)}
         </div>
         """, unsafe_allow_html=True)
-        if st.session_state.get('solar_btn'):
+        if st.button('Iniciar Lección', key='solar_btn', use_container_width=True):
             st.session_state['pagina'] = 'solar'
             st.rerun()
 
@@ -65,9 +63,9 @@ def mostrar_dashboard():
         <div style="background-color: #f0f2f6; padding: 20px; border-radius: 10px; border-left: 5px solid {color};">
             <h4>💨 Energía Eólica</h4>
             <p>Aprovecha la fuerza del viento. Puntaje: {progreso["Eolica"]["puntaje"]}</p>
-            {st.button('Iniciar Lección', key='eolica_btn', use_container_width=True, disabled=True)}
         </div>
         """, unsafe_allow_html=True)
+        st.button('Iniciar Lección', key='eolica_btn', use_container_width=True, disabled=True)
 
     # Tarjeta 3: Hidráulica
     with cols2[0]:
@@ -76,9 +74,9 @@ def mostrar_dashboard():
         <div style="background-color: #f0f2f6; padding: 20px; border-radius: 10px; border-left: 5px solid {color};">
             <h4>💧 Energía Hidráulica</h4>
             <p>La potencia del agua en movimiento. Puntaje: {progreso["Hidraulica"]["puntaje"]}</p>
-            {st.button('Iniciar Lección', key='hidraulica_btn', use_container_width=True, disabled=True)}
         </div>
         """, unsafe_allow_html=True)
+        st.button('Iniciar Lección', key='hidraulica_btn', use_container_width=True, disabled=True)
 
     # Botón para Mini-Juegos (Acceso Rápido)
     with cols2[1]:
@@ -86,11 +84,12 @@ def mostrar_dashboard():
         <div style="background-color: #e0e0e0; padding: 20px; border-radius: 10px; border-left: 5px solid purple;">
             <h4>🎮 Mini Juegos</h4>
             <p>¡Pon a prueba lo aprendido! (Desbloquea una insignia)</p>
-            {st.button('Jugar Ahora', key='juegos_btn', use_container_width=True, disabled=True)}
         </div>
         """, unsafe_allow_html=True)
+        st.button('Jugar Ahora', key='juegos_btn', use_container_width=True, disabled=True)
         
     st.markdown("---")
+
 
 # --- Lección Detallada (Solar) ---
 
@@ -112,7 +111,8 @@ def mostrar_leccion_solar():
         
         st.subheader("Beneficios para Chihuahua")
         st.markdown("""
-        Chihuahua, con su alto índice de días soleados, tiene un **potencial solar enorme**. Grandes proyectos como parques solares aprovechan esta ventaja para la generación a gran escala.
+        Chihuahua, con su alto índice de días soleados, tiene un **potencial solar enorme**. 
+        Grandes proyectos como parques solares aprovechan esta ventaja para la generación a gran escala.
         """)
         
         # Cuestionario Desplegable
@@ -150,16 +150,18 @@ def mostrar_leccion_solar():
                     
                 st.session_state['solar_completado'] = True
                 st.session_state['solar_puntaje'] = puntaje
-                st.session_state['pagina'] = 'dashboard_update' # Usar una página de transición
+                st.session_state['pagina'] = 'dashboard_update'  # Página de transición
                 st.rerun()
 
     with col_imagen:
-        st.image("https://images.unsplash.com/photo-1509391007205-d143c7b80b2a", caption="Paneles Solares Fotovoltaicos", use_column_width=True)
-        st.video("https://youtu.be/J-p4j11H7y8", caption="Video explicativo simple (Ejemplo)") # Usar un video educativo real si se tiene
+        st.image("https://images.unsplash.com/photo-1509391007205-d143c7b80b2a", 
+                 caption="Paneles Solares Fotovoltaicos", use_column_width=True)
+        st.video("https://youtu.be/J-p4j11H7y8", caption="Video explicativo simple (Ejemplo)")
 
     if st.button("⬅️ Volver al Dashboard", key='back_solar'):
         st.session_state['pagina'] = 'dashboard'
         st.rerun()
+
 
 # --- Lógica de la Aplicación Principal ---
 
@@ -194,3 +196,4 @@ elif st.session_state['pagina'] == 'dashboard_update':
         if st.button("Continuar al Dashboard"):
             st.session_state['pagina'] = 'dashboard'
             st.rerun()
+
